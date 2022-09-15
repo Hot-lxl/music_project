@@ -1,0 +1,33 @@
+// mutations:用于修改state的唯一手段
+export default {
+    GETCAROUSEL(state, data) {
+        state.carousel = data;
+    },
+    GETSONGLIST(state, data) {
+        state.SongList = data;
+    },
+    GETMUSICLIST(state, data) {
+        state.MusicList = data;
+    },
+    SETDISC(state, data) {
+        state.Disc = data;
+    },
+    SET_PLAYLIST(state, data) {
+        state.playlist = data;
+    },
+    SET_SEQUENCE_LIST(state, data) {
+        state.sequenceList = data;
+    },
+    SET_CURRENT_INDEX(state, data) {
+        state.currentIndex = data;
+    },
+    SET_CURRENT_URL(state, data) {
+        state.currentUrl = data;
+    },
+    SET_FULL_SCREEN(state, data) {
+        state.playing = data;
+    },
+    SET_PLAYING_STATE(state, data) {
+        state.fullScreen = data;
+    },
+}
