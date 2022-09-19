@@ -22,15 +22,15 @@
             </div>
 
             <!-- 提示框组件 -->
-            <!-- <transition
+            <transition
               enter-active-class="bounceInLeft"
               leave-active-class="fadeOutUp"
               :duration="{ enter: 500, leave: 800 }"
             >
               <div class="prompt-container animated" v-show="ControlPrompta">
-                <prompt></prompt>
+                <Prompt></Prompt>
               </div>
-            </transition> -->
+            </transition>
 
             <div class="middle-r">
               <div class="cd-gc">暂无歌词</div>
@@ -43,22 +43,23 @@
             <!--currentTime： 歌曲当前时间 -->
             <span class="time time-l">{{ format(currentTime) }}</span>
             <div class="progress-bar-wrapper">
-              <!-- <progress-bar
+              <!-- 进度条 -->
+              <ProgressBar
                 :precent="precent"
                 @percentChange="percentChange"
-              ></progress-bar> -->
+              ></ProgressBar>
             </div>
             <span class="time time-r">{{ format(duration) }}</span>
           </div>
-          <!-- <div class="operators">
+          <div class="operators">
             <div class="icon i-left">
-              <i v-html="iconMode" class="iconfont" @click="changeMode"></i>
+              <!-- <i v-html="iconMode" class="iconfont" @click="changeMode"></i> -->
             </div>
             <div class="icon i-left">
               <i @click="prev" class="fa fa-angle-double-left"></i>
             </div>
             <div class="icon i-center">
-              <i @click="togglePlaying" class="fa" :class="playIcon"></i>
+              <!-- <i @click="togglePlaying" class="fa" :class="playIcon"></i> -->
             </div>
             <div class="icon i-right">
               <i @click="next" class="fa fa-angle-double-right"></i>
@@ -66,11 +67,11 @@
             <div class="icon i-right">
               <i class="fa fa-heartbeat"></i>
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
     </transition>
-
+    <!-- 下栏播放器 -->
     <!-- <transition name="mini">
       <div
         class="mini-player"
@@ -127,6 +128,8 @@
 </template>
 
 <script>
+import ProgressBar from "@/components/Base/Progressbar";
+import Prompt from "@/components/Base/prompt";
 import { mapGetters, mapState, mapMutations } from "vuex";
 export default {
   data() {
@@ -134,11 +137,17 @@ export default {
       currentTime: 0, //播放的当前时间
       duration: 0, //歌曲播放的总时长
       // 控制弹出框显示
-      // ControlPrompta: false,
+      ControlPrompta: false,
     };
+  },
+  components: {
+    Prompt,
+    ProgressBar
   },
   computed: {
     ...mapGetters(["fullScreen", "playlist", "currentSong"]),
+    // 歌曲播放的时间 和 总时间的 百分比
+    precent() {},
   },
   methods: {
     ...mapMutations({ setFullScreen: "SET_PLAYING_STATE" }),
@@ -147,6 +156,7 @@ export default {
     back() {
       this.setFullScreen(false);
     },
+
     // 百分比条
     percentChange() {},
     // 上一首歌
@@ -156,7 +166,26 @@ export default {
     // 下一首歌
     next() {},
     //处理歌曲的时间
-    format() {},
+    format(int) {
+      // 初始化
+      int = int | 0;
+      // 分钟
+      const minute = (int / 60) | 0;
+      // 秒
+      const second = this.pad(int % 60);
+      return `${minute}:${second}`;
+    },
+    // 补零操作
+    pad(num, m = 2) {
+      // 转成string计算length
+      let length = num.toString().length;
+      // 循环对比如果length小于2那么前面就加个0--06、07秒
+      while (length < m) {
+        num = "0" + num;
+        length++;
+      }
+      return num;
+    },
   },
 };
 </script>

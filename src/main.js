@@ -18,6 +18,8 @@ import "swiper/dist/css/swiper.css";
 import '@/assets/style/iconfont.css'
 import "@/assets/style/reset.css"
 import "@/assets/style/font-awesome/css/font-awesome.min.css"
+// 动画库
+import "animate.css"
 // 注册插件
 Vue.use(VueAwesomeSwiper);
 
