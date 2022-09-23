@@ -2,6 +2,7 @@
   <div class="player" v-show="playlist.length > 0">
     <!-- 播放器展开图 -->
     <transition name="normal">
+      <!--  //如果全屏 -->
       <div class="normal-player" v-show="fullScreen">
         <div class="background">
           <img :src="currentSong.image" width="100%" height="100%" />
@@ -16,7 +17,7 @@
         <div class="middle">
           <div class="middle-l">
             <div class="cd-wrapper">
-              <div class="cd">
+              <div class="cd" :class="rotateCd">
                 <img class="image" :src="currentSong.image" />
               </div>
             </div>
@@ -53,13 +54,13 @@
           </div>
           <div class="operators">
             <div class="icon i-left">
-              <!-- <i v-html="iconMode" class="iconfont" @click="changeMode"></i> -->
+              <i v-html="iconMode" class="iconfont" @click="changeMode"></i>
             </div>
             <div class="icon i-left">
               <i @click="prev" class="fa fa-angle-double-left"></i>
             </div>
             <div class="icon i-center">
-              <!-- <i @click="togglePlaying" class="fa" :class="playIcon"></i> -->
+              <i @click="togglePlaying" class="fa" :class="playIcon"></i>
             </div>
             <div class="icon i-right">
               <i @click="next" class="fa fa-angle-double-right"></i>
@@ -116,55 +117,214 @@
 
     <!-- <play-list ref="playlist"></play-list> -->
 
-    <!-- <audio
+    <audio
       :src="currentUrl"
       ref="audio"
       @canplay="ready"
       @error="error"
       @timeupdate="updataTime"
       @ended="end"
-    ></audio> -->
+    ></audio>
   </div>
 </template>
 
 <script>
+import { random } from "@/common/util";
+import { reqSongUrl } from "@/network/api";
+import { playMode } from "@/common/config";
 import ProgressBar from "@/components/Base/Progressbar";
 import Prompt from "@/components/Base/prompt";
 import { mapGetters, mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      songReady: false, //歌曲是否准备就绪
       currentTime: 0, //播放的当前时间
       duration: 0, //歌曲播放的总时长
-      // 控制弹出框显示
-      ControlPrompta: false,
+      ControlPrompta: false, // 控制弹出框显示
+      // 字体图标iconfont
+      sequence: "&#xe671;",
+      loop: "&#xe607;",
+      random: "&#xe672;",
     };
   },
   components: {
     Prompt,
-    ProgressBar
+    ProgressBar,
   },
   computed: {
-    ...mapGetters(["fullScreen", "playlist", "currentSong"]),
-    // 歌曲播放的时间 和 总时间的 百分比
-    precent() {},
+    ...mapGetters([
+      "fullScreen",
+      "playlist",
+      "currentSong",
+      "currentUrl",
+      "mode",
+      "playing",
+      "currentIndex",
+      "sequenceList",
+    ]),
+    // 计算百分比
+    precent() {
+      // 歌曲播放的时间 和 总时间的 百分比
+      return this.currentTime / this.duration;
+    },
+    // 播放模式的图标
+    iconMode() {
+      //如果是顺序播放
+      return this.mode === playMode.sequence
+        ? this.sequence
+        : this.mode === playMode.loop
+        ? this.loop
+        : this.random;
+    },
+
+    playIcon() {
+      // playing 为 ture时 显示暂停的图标 false时 显示播放的图标
+      return this.playing ? "fa-pause-circle-o" : "fa-play-circle";
+    },
+    // 歌曲cd磁盘图片 旋转 类名 true 旋转 false 停止
+    rotateCd() {
+      return this.playing ? "play" : "play pause";
+    },
   },
   methods: {
-    ...mapMutations({ setFullScreen: "SET_PLAYING_STATE" }),
-
+    ...mapMutations({
+      setFullScreen: "SET_FULL_SCREEN",
+      setPlaying: "SET_PLAYING_STATE",
+      setCurrentIndex: "SET_CURRENT_INDEX",
+      setCurrentUrl: "SET_CURRENT_URL",
+      setPlayMode: "SET_PLAY_MODE",
+      setplaylist: "SET_PLAYLIST",
+    }),
+    // 发送url请求 获取url地址 再改变vuex 的 setCurrentUrl值
+    async getUrl(id) {
+      // 根据歌曲id获取地址
+      const result = await reqSongUrl(id);
+      if (result.code === 200) {
+        // 地址为null
+        if (result.data[0].url == null) {
+          // 提示框显示
+          this.ControlPrompta = true;
+          // 1s后提示弹出框消失
+          this.OutPrompt();
+          // 停止播放上一首歌曲
+          this.$refs.audio.pause();
+          //可以点击上一首或者下一首歌曲
+          this.songReady = true;
+        }
+        // 成功则使用mutaions的setCurrentUrl改变state中的地址
+        this.setCurrentUrl(result.data[0].url);
+      }
+    },
+    // 1秒后关闭提示框
+    OutPrompt() {
+      var timer = setTimeout(() => {
+        this.ControlPrompta = false;
+        // 关闭定时器
+        clearTimeout(timer);
+      }, 1000);
+    },
     // 点击隐藏展开播放页面
     back() {
       this.setFullScreen(false);
     },
-
-    // 百分比条
-    percentChange() {},
+    // 点击切换播放顺序
+    changeMode() {
+      // 三种状态可以切换计算出来
+      let mode = (this.mode + 1) % 3;
+      // 修改mode值state
+      this.setPlayMode(mode);
+      // 创建一个空的list来装顺序列表
+      let list = null;
+      // console.log(this.sequenceList + "---");
+      // 顺序播放
+      if (mode === playMode.sequence) {
+        list = this.sequenceList;
+      } else if (mode === playMode.random) {
+        // 随机 打乱顺序列表就行了
+        list = random(this.sequenceList);
+      } else if (mode === playMode.loop) {
+        // 循环 必须设置防止传入空对象而报错
+        list = this.sequenceList;
+      }
+      // 如果是循环那么就根据列表id和当前播放的id找到对应的歌曲下标
+      this.resetCurrentIndex(list);
+      // 修改顺序列表
+      this.setplaylist(list);
+    },
+    resetCurrentIndex(list) {
+      console.log(list);
+      // 根据列表查找当前播放的id找到了就返回下标
+      let index = list.findIndex((item) => {
+        return item.id === this.currentSong.id;
+      });
+      // 重新设置索引
+      this.setCurrentIndex(index);
+    },
+    // audio标签的时间
+    percentChange(precent) {
+      // 播放的歌曲time = 歌曲总时间 * (百分比)
+      this.$refs.audio.currentTime = this.$refs.audio.duration * precent;
+      // 是否播放改变暂停按钮状态
+      if (!this.playing) {
+        this.togglePlaying();
+      }
+    },
     // 上一首歌
-    prev() {},
+    prev() {
+      // 首先判断歌曲是否准备好
+      if (!this.songReady) {
+        return;
+      }
+      // 当前索引-1
+      let index = this.currentIndex - 1;
+      // 判断如果为-1那么就是最后一首歌
+      if (index === -1) {
+        index = this.playlist.length - 1;
+      }
+      // 歌曲只有一首的情况下
+      if (this.playlist.length === 1) {
+        this.aloop();
+        return;
+      }
+      //改变索引的值
+      this.setCurrentIndex(index);
+      // 根据当前索引 获取 id值 再发送请求获取 歌曲url值 再修改 vuex中的 currentUrl
+      this.getUrl(this.playlist[index].id);
+      // 改变播放的状态
+      if (!this.playing) {
+        this.togglePlaying();
+      }
+      // 关闭当前歌曲准备
+      this.songReady = false;
+    },
+    // 歌曲只有一首的情况下
+    aloop() {
+      // 时间为0
+      this.$refs.audio.currentTime = 0;
+      // 播放
+      this.$refs.audio.play();
+    },
     // 暂停开始按钮
-    togglePlaying() {},
+    togglePlaying() {
+      this.setPlaying(!this.playing);
+    },
     // 下一首歌
-    next() {},
+    next() {
+      if (!this.songReady) {
+        return;
+      }
+      let index = this.currentIndex + 1;
+      if (index > this.playlist.length - 1) {
+        index = 0;
+      }
+      this.setCurrentIndex(index);
+      this.getUrl(this.playlist[index].id);
+      if (!this.playing) {
+        this.togglePlaying();
+      }
+      this.songReady = false;
+    },
     //处理歌曲的时间
     format(int) {
       // 初始化
@@ -185,6 +345,47 @@ export default {
         length++;
       }
       return num;
+    },
+    ready() {
+      // 歌曲准备好后 就播放 解决点击上/下一首按钮后 不播放的问题
+      this.songReady = true;
+      // 播放音乐调用audio标签的 play()方法
+      this.$refs.audio.play();
+      // 获取歌曲的总时长
+      this.duration = this.$refs.audio.duration;
+    },
+    //  error 事件，当歌曲发生错误的时候，做用户体验，防止用户快速切换导致报错。
+    error() {
+      this.songReady = true;
+    },
+    //修改当前播放的时间
+    updataTime(event) {
+      // e.target.currentTime 获取的是歌曲正在播放的时间 一直播放则一直获取
+      this.currentTime = event.target.currentTime;
+    },
+    // 歌曲播放完成
+    end() {
+      // 判断播放的模式是否是循环
+      if (this.mode === playMode.loop) {
+        // 单曲循环情况下就重新变为0
+        setTimeout(() => {
+          this.$refs.audio.currentTime = 0;
+        }, 1000);
+      } else {
+        // 否则下一首
+        this.next();
+      }
+    },
+  },
+  watch: {
+    // 监听 播放状态 true 播放  false 暂停
+    playing(NewPlaying) {
+      // 获取audiob标签
+      const audio = this.$refs.audio;
+      // 判断是否为true播放
+      this.$nextTick(() => {
+        NewPlaying ? audio.play() : audio.pause();
+      });
     },
   },
 };
@@ -352,12 +553,12 @@ export default {
 
           &.time-l {
             text-align: left;
-            margin-right: 2px;
+            margin-right: 10px;
           }
 
           &.time-r {
             text-align: right;
-            margin-left: 2px;
+            margin-left: 10px;
           }
         }
 

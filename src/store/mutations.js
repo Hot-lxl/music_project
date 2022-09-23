@@ -24,10 +24,13 @@ export default {
     SET_CURRENT_URL(state, data) {
         state.currentUrl = data;
     },
-    SET_FULL_SCREEN(state, data) {
+    SET_PLAYING_STATE(state, data) {
         state.playing = data;
     },
-    SET_PLAYING_STATE(state, data) {
+    SET_FULL_SCREEN(state, data) {
         state.fullScreen = data;
     },
+    SET_PLAY_MODE(state, data) {
+        state.mode = data;
+    }
 }

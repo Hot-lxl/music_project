@@ -18,7 +18,7 @@
       <div class="loading-container" v-show="!songs.length">
         <Loading></Loading>
       </div>
-
+      
       <!-- 找不到音乐提示框组件 -->
       <transition
         enter-active-class="bounceInLeft"

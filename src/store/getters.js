@@ -6,6 +6,10 @@ export default {
     playing(state) {
         return state.playing;
     },
+    // 播放模式
+    mode(state) {
+        return state.mode;
+    },
     // 播放器的展开和隐藏
     fullScreen(state) {
         return state.fullScreen;
@@ -14,12 +18,20 @@ export default {
     playlist(state) {
         return state.playlist || []
     },
-    // 播放循序
+    // 歌曲顺序列表
     sequenceList(state) {
         return state.sequenceList || [];
+    },
+    // 当前的歌曲的的索引
+    currentIndex(state){
+        return state.currentIndex
     },
     // 当前播放歌曲
     currentSong(state) {
         return state.playlist[state.currentIndex] || [];
+    },
+    // 当前播放歌曲map3的url地址
+    currentUrl(state) {
+        return state.currentUrl
     }
 }

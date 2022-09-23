@@ -31,5 +31,6 @@ new Vue({
   el: '#app',
   router,//路由
   store,//vuex
-  render: h => h(app)
+  render: h => h(app),
 })
+
