@@ -73,50 +73,32 @@
       </div>
     </transition>
     <!-- 下栏播放器 -->
-    <!-- <transition name="mini">
-      <div
-        class="mini-player"
-        v-show="!fullScreen"
-        @click="open"
-      >
+    <transition name="mini">
+      <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="icon">
           <img
             :class="rotateCd"
-            v-lazy="currentSong.image"
+            :src="currentSong.image"
             width="40"
             height="40"
-          >
+          />
         </div>
         <div class="text">
-          <h2
-            class="name"
-            v-html="currentSong.name"
-          ></h2>
-          <p
-            class="desc"
-            v-html="currentSong.singer"
-          ></p>
+          <h2 class="name" v-html="currentSong.name"></h2>
+          <p class="desc" v-html="currentSong.singer"></p>
         </div>
-        <div
-          class="control"
-          @click.stop="togglePlaying"
-        >
-          <i
-            class="fa"
-            :class="miniIcon"
-          ></i>
+        <div class="control" @click.stop="togglePlaying">
+          <i class="fa" :class="miniIcon"></i>
         </div>
-        <div
-          class="control"
-          @click="showPlaylist"
-        >
+        <div class="control" @click.stop="showPlaylist">
           <i class="fa fa-random"></i>
         </div>
       </div>
-    </transition> -->
+    </transition>
 
-    <!-- <play-list ref="playlist"></play-list> -->
+    <play-list ref="playlist"></play-list>
 
+    <!-- 使用audio标签来播放音乐 -->
     <audio
       :src="currentUrl"
       ref="audio"
@@ -129,6 +111,7 @@
 </template>
 
 <script>
+import PlayList from "@/components/PlayList/PlayList";
 import { random } from "@/common/util";
 import { reqSongUrl } from "@/network/api";
 import { playMode } from "@/common/config";
@@ -151,6 +134,7 @@ export default {
   components: {
     Prompt,
     ProgressBar,
+    PlayList,
   },
   computed: {
     ...mapGetters([
@@ -165,7 +149,7 @@ export default {
     ]),
     // 计算百分比
     precent() {
-      // 歌曲播放的时间 和 总时间的 百分比
+      // 歌曲播放的时间 / 总时间的 百分比
       return this.currentTime / this.duration;
     },
     // 播放模式的图标
@@ -185,6 +169,10 @@ export default {
     // 歌曲cd磁盘图片 旋转 类名 true 旋转 false 停止
     rotateCd() {
       return this.playing ? "play" : "play pause";
+    },
+    miniIcon() {
+      // playing 为 ture时 显示暂停的图标 false时 显示播放的图标
+      return this.playing ? "fa-pause-circle-o" : "fa-play-circle";
     },
   },
   methods: {
@@ -375,6 +363,15 @@ export default {
         // 否则下一首
         this.next();
       }
+    },
+
+    // 播放器展开
+    open() {
+      this.setFullScreen(true);
+    },
+    // 展开播放列表(调用子组件的方法)
+    showPlaylist() {
+      this.$refs.playlist.show();
     },
   },
   watch: {

@@ -11,7 +11,7 @@
     <!-- 插槽来放歌单列表和加载图 -->
     <Scroll :data="songs" class="content" ref="list">
       <div class="song-list-wrapper">
-        <!-- 自定义事件 -->
+        <!-- 自定义事件 歌曲列表 -->
         <SongList @select="selectItem" :songs="songs"></SongList>
       </div>
       <!-- 加载提示图 -->

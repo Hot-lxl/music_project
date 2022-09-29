@@ -11,3 +11,5 @@ export const reqGetMusicList = () => requests.get(`/personalized/newsong`)
 export const reqSongDetail = (ids) => requests.get(`/playlist/detail?id=${ids}`,)
 //获取音乐的url
 export const reqSongUrl = (ids) => requests.get(`/song/url?id=${ids}`,)
+// 获取歌手数据
+export const reqGetSingerList = () => requests.get(`/top/artists`, { params: { limit: 150 } })

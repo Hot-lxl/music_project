@@ -36,7 +36,6 @@ export default {
     bgImage() {
       return this.disc.picUrl;
     },
-    // 歌手
   },
   methods: {
     // 通过路由的 歌单id 获取歌单歌曲数据
@@ -60,15 +59,13 @@ export default {
 </script>
 
 <style lang="stylus" scoped >
+// enter-active 和 leave-active 分别代表进场和出场 Vue 会自动识别
 .slide-enter-active, .slide.leave-active {
   transition: all 0.3s;
 }
-
+// 开始到结束
 .slide-enter, .slide-leave-to {
   transform: translate3d(100%, 0, 0);
 }
 
-* {
-  background-color: red;
-}
 </style>

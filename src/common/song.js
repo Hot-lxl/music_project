@@ -11,7 +11,7 @@ export default class Song {
     this.url = url
   }
 }
-
+// 获取歌手的name
 function singerName (arr) {
   let name = []
   name = arr.map((item) => {

@@ -6,7 +6,7 @@ export default {
     playing(state) {
         return state.playing;
     },
-    // 播放模式
+    // 当前播放模式
     mode(state) {
         return state.mode;
     },
@@ -23,7 +23,7 @@ export default {
         return state.sequenceList || [];
     },
     // 当前的歌曲的的索引
-    currentIndex(state){
+    currentIndex(state) {
         return state.currentIndex
     },
     // 当前播放歌曲
@@ -33,5 +33,10 @@ export default {
     // 当前播放歌曲map3的url地址
     currentUrl(state) {
         return state.currentUrl
+    },
+    // 排行详情数据
+    topList(state) {
+        return state.topList || []
     }
+
 }

@@ -32,5 +32,9 @@ export default {
     },
     SET_PLAY_MODE(state, data) {
         state.mode = data;
+    },
+    SET_TOPLIST(state, data) {
+        state.topList = data;
     }
+
 }

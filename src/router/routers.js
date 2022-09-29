@@ -4,6 +4,7 @@ import Ranking from '@/views/Ranking/Ranking.vue'
 import Singer from '@/views/Singer/Singer.vue'
 import Search from '@/views/Search/Search.vue'
 import Bisc from '@/views/Recommend/Disc/Disc'
+import TopList from '@/views/Ranking/TopList/TopList'
 // 对外暴露routers
 export default [
     {
@@ -14,14 +15,19 @@ export default [
             {
                 path: ":id",//把子组件路径当成占位符
                 component: Bisc,
-                meta: { isShow: false },
             }
         ]
     },
     {
         path: "/ranking",
         component: Ranking,
-        meta: { isShow: true }
+        meta: { isShow: true },
+        children:[
+            {
+                path:":id",
+                component:TopList,
+            }
+        ]
     },
     {
         path: "/singer",
