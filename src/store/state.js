@@ -1,4 +1,5 @@
 import { playMode } from "@/common/config"
+import {loadSearch} from '@/common/cache'
 /*
 状态对象
  */
@@ -9,7 +10,6 @@ export default {
     SongList: [],
     // 存放推荐音乐数据
     MusicList: [],
-    // 存放歌单详情的数据   
     Disc: [],//点击的推荐歌单
     playing: false, // 播放状态
     fullScreen: false, // 播放器的展开 和 隐藏
@@ -19,4 +19,6 @@ export default {
     currentIndex: -1, // 播放当前歌曲的索引
     currentUrl: '', // 当前播放歌曲map3的url地址,
     topList:[],//点击的排行榜歌单
+    singer:{},//点击的歌手
+    searchHistory:loadSearch(),// 搜索历史数据
 }

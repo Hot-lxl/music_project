@@ -1,11 +1,14 @@
 <template>
+  <!--  热门歌手页面 -->
   <div class="singer">
-    <!-- <list-view @select="selectSinger" :data="singers"></list-view> -->
+    <ListView @select="selectSinger" :data="singers"></ListView>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import ListView from "@/components/Base/listview";
+import { mapMutations } from "vuex";
 import Singer from "@/common/singer";
 import { reqGetSingerList } from "@/network/api";
 import pinyin from "pinyin";
@@ -13,10 +16,22 @@ const HOTname = "热门";
 const HOTsinger = 16;
 export default {
   name: "Singer",
+  data() {
+    return {
+      singers: [], //处理好的歌手数据
+    };
+  },
+  components: {
+    ListView,
+  },
   created() {
+    // 页面创建之前获取歌手数据
     this.getSingerList();
   },
   methods: {
+    ...mapMutations({
+      setSinger: "SET_SINGER",
+    }),
     // 获取请求歌手数据
     async getSingerList() {
       let result = await reqGetSingerList();
@@ -26,8 +41,9 @@ export default {
       }
     },
     // 得到歌手的数据进行处理
-    SingerList(singers) {
-      singers.map((item) => {
+    SingerList(res) {
+      // 只是遍历并且添加res的属性
+      res.map((item) => {
         // 把歌手名字首字母转成拼音
         let py = pinyin(item.name[0], {
           style: pinyin.STYLE_FIRST_LETTER,
@@ -36,8 +52,7 @@ export default {
         item.py = py[0][0].toUpperCase();
       });
       // 对歌手进一步处理
-      let result = this.normalizeSinger(singers);
-      console.log(result);
+      this.singers = this.normalizeSinger(res);
     },
     // 处理歌手数据热门
     normalizeSinger(singers) {
@@ -105,10 +120,13 @@ export default {
       // 合并数组并返回出去
       return hot.concat(ret);
     },
-    // 歌手列表
-    singers() {},
     //点进进入歌手详情
-    selectSinger() {},
+    selectSinger(singer) {
+      // 进入子组件
+      this.$router.push(`/singer/${singer.id}`);
+      // 把点击个歌手数据传入vuex存储
+      this.setSinger(singer);
+    },
   },
 };
 </script>

@@ -14,6 +14,7 @@ export default class Song {
 // 获取歌手的name
 function singerName (arr) {
   let name = []
+  // 因为是数组所以需要遍历得到名字
   name = arr.map((item) => {
     // console.log(arr)
     return item.name
@@ -22,6 +23,7 @@ function singerName (arr) {
   return name.join('/')
 }
 
+// 歌曲基本结构
 export function createSong (music) {
   return new Song({
     // 歌手歌曲 id

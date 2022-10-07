@@ -9,7 +9,12 @@
       <div class="filter"></div>
     </div>
     <!-- 插槽来放歌单列表和加载图 -->
-    <Scroll :data="songs" class="content" ref="list">
+    <Scroll
+      :data="songs"
+      class="content"
+      ref="list"
+      :listenScroll="listenScroll"
+    >
       <div class="song-list-wrapper">
         <!-- 自定义事件 歌曲列表 -->
         <SongList @select="selectItem" :songs="songs"></SongList>
@@ -18,7 +23,7 @@
       <div class="loading-container" v-show="!songs.length">
         <Loading></Loading>
       </div>
-      
+
       <!-- 找不到音乐提示框组件 -->
       <transition
         enter-active-class="bounceInLeft"
@@ -74,7 +79,7 @@ export default {
   methods: {
     // 回到上一页
     back() {
-      this.$router.push("/recommend");
+      this.$router.back();
     },
     //点击播放音乐(发送自定义事件)
     async selectItem(item, index) {
@@ -90,7 +95,7 @@ export default {
         }
         // 如果有地址就把地址存入vuex
         const url = result.data[0].url;
-        this.$store.dispatch("selectPlay", { list:this.songs, index, url });
+        this.$store.dispatch("selectPlay", { list: this.songs, index, url });
       }
     },
     // 1.8秒后关闭提示框

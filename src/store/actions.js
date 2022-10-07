@@ -7,6 +7,7 @@ import { reqGetCarousel, reqGetSongList, reqGetMusicList, reqSongUrl } from "@/n
 import * as types from '@/store/mutations-types'
 import { playMode } from "@/common/config";
 import { random } from "@/common/util";
+import {saveSearch} from '@/common/cache'
 // 封装一个findIndex方法
 function findIndex(list, song) {
     return list.findIndex((item) => {
@@ -112,6 +113,10 @@ export default {
         commit(types.SET_PLAYING_STATE, false)
         commit(types.SET_CURRENT_INDEX, -1)
         commit(types.SET_CURRENT_URL, "")
+    },
+    // 保存搜索历史记录
+    saveSearchHistory({commit},query){
+        // 把历史存放vuex并且缓存localStorage 执行了两个函数
+        commit(types.SAVESERACHHISTORY,saveSearch(query));
     }
-
 }

@@ -37,6 +37,10 @@ export default {
     // 排行详情数据
     topList(state) {
         return state.topList || []
-    }
+    },
+    // 点击的歌手
+    singer(state) {
+        return state.singer || {}
+    },
 
 }

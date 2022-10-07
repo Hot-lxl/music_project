@@ -13,7 +13,7 @@ export default {
   name: "Disc",
   data() {
     return {
-      // 歌单详情数据
+      // 歌单数据
       songs: [],
     };
   },

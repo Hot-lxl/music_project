@@ -21,7 +21,7 @@
             <span class="desc">{{ song.singer }}</span>
           </div>
         </div>
-      </li>
+      </li> 
     </ul>
   </div>
 </template>

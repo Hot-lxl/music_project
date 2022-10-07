@@ -3,7 +3,7 @@
     <slot></slot>
   </div>
 </template>
-
+  
 <script>
 import BScroll from "better-scroll";
 export default {
@@ -64,11 +64,9 @@ export default {
         // 点击
         click: this.click,
       });
-
       // 是否派发滚动事件
       if (this.listenScroll) {
         let _this = this;
-        // 监视滑动过程
         this.scroll.on("scroll", (pos) => {
           _this.$emit("scroll", pos);
         });

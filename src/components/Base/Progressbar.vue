@@ -108,7 +108,7 @@ export default {
       this.$emit("percentChange", precent);
     },
     // 点击进度条
-    progressClick(e) {},
+    progressClick(e) {}, 
   },
 };
 </script>

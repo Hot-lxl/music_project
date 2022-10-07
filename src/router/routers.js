@@ -5,6 +5,7 @@ import Singer from '@/views/Singer/Singer.vue'
 import Search from '@/views/Search/Search.vue'
 import Bisc from '@/views/Recommend/Disc/Disc'
 import TopList from '@/views/Ranking/TopList/TopList'
+import SingerDetail from "@/views/Singer/SingerDetail/SingerDetail"
 // 对外暴露routers
 export default [
     {
@@ -22,17 +23,23 @@ export default [
         path: "/ranking",
         component: Ranking,
         meta: { isShow: true },
-        children:[
+        children: [
             {
-                path:":id",
-                component:TopList,
+                path: ":id",
+                component: TopList,
             }
         ]
     },
     {
         path: "/singer",
         component: Singer,
-        meta: { isShow: true }
+        meta: { isShow: true },
+        children: [
+            {
+                path: ":id",
+                component: SingerDetail,
+            }
+        ]
     },
     {
         path: "/search",

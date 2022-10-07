@@ -1,3 +1,4 @@
+import * as types from "./mutations-types"
 // mutations:用于修改state的唯一手段
 export default {
     GETCAROUSEL(state, data) {
@@ -33,8 +34,14 @@ export default {
     SET_PLAY_MODE(state, data) {
         state.mode = data;
     },
-    SET_TOPLIST(state, data) {
+    [types.SET_TOPLIST](state, data) {
         state.topList = data;
+    },
+    [types.SET_SINGER](state, data) {
+        state.singer = data;
+    },
+    [types.SAVESERACHHISTORY](state, data) {
+        state.searchHistory = data;
     }
 
 }
