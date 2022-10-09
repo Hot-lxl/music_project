@@ -46,7 +46,7 @@ export default {
         return;
       }
       // 存在就发送ajax请求数据
-      const result = await reqSongDetail(id);
+      const result = await reqPlayListDetail(id);
       if (result.code == 200) {
         this.songs = result.playlist.tracks.map((item) => {
           // 使用构造函数来装每一个歌单的数据提取指定的属性

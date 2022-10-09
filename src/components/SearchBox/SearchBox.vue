@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { debounce } from "@/common/util";
 export default {
   name: "SearchBox",
   props: {
@@ -32,8 +33,9 @@ export default {
   },
   created() {
     //监听输入框的query变化，触发query自定义事件 ，将输入的newQuery传给search组件
-    this.$watch((newquery) => {
-      this.$emit("query", newquery);
+    this.$watch("query", (newquery) => {
+      // 防抖：规定时间才能发送数据
+      debounce(this.$emit("query", newquery));
     });
   },
 };

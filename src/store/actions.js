@@ -7,7 +7,7 @@ import { reqGetCarousel, reqGetSongList, reqGetMusicList, reqSongUrl } from "@/n
 import * as types from '@/store/mutations-types'
 import { playMode } from "@/common/config";
 import { random } from "@/common/util";
-import {saveSearch} from '@/common/cache'
+import { saveSearch } from '@/common/cache'
 // 封装一个findIndex方法
 function findIndex(list, song) {
     return list.findIndex((item) => {
@@ -115,8 +115,61 @@ export default {
         commit(types.SET_CURRENT_URL, "")
     },
     // 保存搜索历史记录
-    saveSearchHistory({commit},query){
+    saveSearchHistory({ commit }, query) {
         // 把历史存放vuex并且缓存localStorage 执行了两个函数
-        commit(types.SAVESERACHHISTORY,saveSearch(query));
+        commit(types.SAVESERACHHISTORY, saveSearch(query));
+    },
+    //插入歌曲
+    insertSong({ commit, state }, song) {
+        // 首先获取需要修改的数据
+        // 播放列表
+        let playlist = state.playlist;
+        // 顺序列表
+        let sequenceList = state.sequenceList;
+        // 当前歌曲index
+        let currentIndex = state.currentIndex;
+
+        // 记录当前播放的歌曲
+        let currentSong = playlist[currentIndex];
+
+        // 查找播放列表是否有这首歌，并且返回它的索引
+        let fpIndex = findIndex(playlist, song)
+        // 插入就需要把index++
+        currentIndex++
+        // 添加到播放列表，并且替换成当前播放的歌曲
+        playlist.splice(currentIndex, 0, song)
+        // 如果存在，那么就需要删除播放列表原来歌曲的位置，因为现在播放的位置已经改变
+        if (fpIndex > -1) {
+            // 在判断在当前播放的歌曲前还是后面
+            if (currentIndex > fpIndex) {
+                // 下标小的话，说明下标没有因为插入而影响，不需要改变直接删除
+                playlist.splice(fpIndex, 1)
+                // 删除了currentindex需要--
+                currentIndex--
+            } else {
+                // 因为currentIndex+1了插入了歌曲，这个时候的fpindex就改变了需要+1
+                playlist.splice(fpIndex + 1, 1)
+            }
+        }
+        // 修改顺序列表
+        // 当前歌曲+1就是要替换的歌曲位置
+        let curretnSindex = findIndex(sequenceList, currentSong) + 1;
+        //再在循序列表中查找当前播放的歌曲
+        let fsIndex = findIndex(sequenceList, song);
+        // 插入这首歌 到当前 播放列表
+        sequenceList.splice(curretnSindex, 0, song);
+        if (fsIndex > -1) {
+            if (curretnSindex > fsIndex) {
+                sequenceList.splice(fsIndex, 1)
+            } else {
+                sequenceList.splice(fsIndex + 1, 1)
+            }
+        }
+        // 改变需要改变的
+        commit(types.SET_PLAYLIST, playlist);
+        commit(types.SET_SEQUENCE_LIST, sequenceList);
+        commit(types.SET_CURRENT_INDEX, currentIndex);
+        commit(types.SET_FULL_SCREEN, true);
+        commit(types.SET_PLAYING_STATE, true);
     }
 }

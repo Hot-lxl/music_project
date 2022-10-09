@@ -8,7 +8,8 @@ import router from './router'
 import store from '@/store'
 // 引入轮播图插件vue-awesome-swiper
 import VueAwesomeSwiper from 'vue-awesome-swiper'
-
+// 引入所有api
+import * as API from '@/network/api'
 
 
 
@@ -32,5 +33,9 @@ new Vue({
   router,//路由
   store,//vuex
   render: h => h(app),
+  beforeCreate() {
+    // 注册到vue原型上这样所有组件都拥有了
+    Vue.prototype.$API = API;
+  }
 })
 

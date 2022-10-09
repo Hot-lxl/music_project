@@ -33,7 +33,7 @@
 <script>
 import Loading from "@/components/Base/Loading";
 import Scroll from "@/components/Base/scroll";
-import { reqSongDetail } from "@/network/api";
+import { reqPlayListDetail } from "@/network/api";
 import { mapMutations } from "vuex";
 // 定义一个数组用来装排行榜的id
 var RANK_TOP = [
@@ -71,7 +71,7 @@ export default {
     async getTopList() {
       // 一共请求9个排行榜
       for (let index = 0; index < RANK_TOP.length; index++) {
-        let result = await reqSongDetail(RANK_TOP[index]);
+        let result = await reqPlayListDetail(RANK_TOP[index]);
         if (result.code === 200) {
           // 存储点击的歌曲分类所以相关信息
           let list = result.playlist;

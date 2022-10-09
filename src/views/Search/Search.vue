@@ -61,7 +61,7 @@
 <script>
 import Suggest from "@/components/Suggest/Suggest";
 import SearchBox from "@/components/SearchBox/SearchBox";
-import { mapActions } from 'vuex';
+import { mapActions } from "vuex";
 export default {
   name: "Search",
   components: {
@@ -79,15 +79,14 @@ export default {
     onQueryChange(newquery) {
       this.query = newquery;
     },
-    // 离开SerachBox组件触发blur()
+    // SerachBox组件触发blur()
     blurInput() {
-      console.log("离开box");
       this.$refs.searchBox.blur();
     },
     // 保存搜索记录
-    saveSearch(){
-        this.saveSearchHistory(this.query);
-    }
+    saveSearch() {
+      this.saveSearchHistory(this.query);
+    },
   },
 };
 </script>

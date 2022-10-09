@@ -15,7 +15,7 @@ export function random(arr = []) {
   return _arr
 }
 
-// 节流函数 减少 请求次数
+// 防抖函数 减少 请求次数
 export function debounce(func, deplay) {
   let timer
 
