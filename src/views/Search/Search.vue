@@ -5,8 +5,8 @@
     <div class="search-box-wrapper">
       <SearchBox ref="searchBox" @query="onQueryChange"></SearchBox>
     </div>
-    <!-- <div class="shortcut-wrapper" v-show="!query">
-      <scroll class="shortcut" :data="shortcut" ref="shortcut">
+    <div class="shortcut-wrapper" v-show="!query">
+      <Scroll class="shortcut" :data="shortcut" ref="shortcut">
         <div>
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
@@ -22,7 +22,7 @@
             </ul>
           </div>
 
-          <div class="search-history" v-show="searchHistory.length">
+          <!-- <div class="search-history" v-show="searchHistory.length">
             <h1 class="title">
               <span class="text">搜索历史</span>
               <span class="clear" @click="showConfirm">
@@ -34,10 +34,10 @@
               @delete="deleteOne"
               :searches="searchHistory"
             ></search-list>
-          </div>
+          </div> -->
         </div>
-      </scroll>
-    </div>-->
+      </Scroll>
+    </div>
     <!-- 搜索详情 -->
     <div class="search-result" v-show="query">
       <Suggest
@@ -46,7 +46,7 @@
         @select="saveSearch"
       ></Suggest>
     </div>
-
+    <!-- 提示框 -->
     <!-- <confirm
       ref="confirm"
       text="是否清空搜索历史数据"
@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import Scroll from "@/components/Base/scroll";
 import Suggest from "@/components/Suggest/Suggest";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import { mapActions } from "vuex";
@@ -67,14 +68,35 @@ export default {
   components: {
     SearchBox,
     Suggest,
+    Scroll,
   },
   data() {
     return {
       query: "", //输入的关键词
+      hots: [], //热门搜索
+      shortcut: [],
     };
+  },
+  created() {
+    // 页面加载前或热门搜索
+    this.getHotSearch();
   },
   methods: {
     ...mapActions(["saveSearchHistory"]),
+    // 获取热门搜索
+    async getHotSearch() {
+      let res = await this.$API.resGetHotSearch();
+      console.log(res);
+      if (res.code === 200) {
+        let ret = [];
+        res.result.hots.forEach((item) => {
+          ret.push(item.first);
+        });
+        console.log(ret);
+        // 赋值
+        this.hots = ret;
+      }
+    },
     // 自定义事件接受触发得参数
     onQueryChange(newquery) {
       this.query = newquery;

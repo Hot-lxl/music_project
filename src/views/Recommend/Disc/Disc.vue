@@ -6,7 +6,7 @@
 
 <script>
 import { createRecommendListSong } from "@/common/song";
-import { reqSongDetail } from "@/network/api";
+import { reqPlayListDetail } from "@/network/api";
 import { mapState } from "vuex";
 import MusicList from "@/components/MusicList/MusicList.vue";
 export default {

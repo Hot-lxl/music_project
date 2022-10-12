@@ -68,8 +68,9 @@
 </template>
 
 <script>
+import { createNewMusic } from "@/common/song";
 import Loading from "@/components/Base/Loading";
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import Carousel from "@/components/Carousel/Carousel.vue";
 export default {
   name: "Recommend",
@@ -102,11 +103,29 @@ export default {
     }),
   },
   methods: {
+    ...mapMutations({
+      setCurrentUrl: "SET_CURRENT_URL",
+    }),
     // 点击进入歌单详情页面
     selectItem(item) {
       this.$router.push({ path: `/recommend/${item.id}` });
       // 把点击的歌单用vuex存储
       this.$store.commit("SETDISC", item);
+    },
+    // 点击播放音乐
+    async playNewMusic(item, MusicList, index) {
+      console.log(item);
+      // 更据点击的歌曲获取url
+      let res = await this.$API.reqSongUrl(item.id);
+      if (res.code === 200) {
+        let url = res.data[0].url;
+        // 对 新音乐 数组进行修改
+        MusicList = MusicList.map((item) => {
+          return createNewMusic(item);
+        });
+        // 调用selectPlay
+        this.$store.dispatch("selectPlay", { list: MusicList, index, url });
+      }
     },
   },
 };

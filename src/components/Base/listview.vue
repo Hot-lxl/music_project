@@ -1,5 +1,5 @@
 <template>
-  <scroll
+  <Scroll
     ref="listview"
     class="listview"
     :data="data"
@@ -44,7 +44,7 @@
         </li>
       </ul>
     </div>
-  </scroll>
+  </Scroll>
 </template>
 
 <script>

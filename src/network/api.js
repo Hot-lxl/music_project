@@ -19,3 +19,5 @@ export const resGetSingerDetail = (ids) => requests.get(`/artists?id=${ids}`)
 export const reqSearchSongs = (query, offset) => requests.get(`/search`, { params: { keywords: query, offset: offset } })
 // 获取歌曲详情
 export const reqSongDetail = (id) => requests.get("/song/detail", { params: { ids: id } })
+// 获取热门搜索
+export const resGetHotSearch = () => requests.get("/search/hot");

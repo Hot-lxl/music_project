@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "animate.css": "^3.7.2",
+    "babel-polyfill": "^6.26.0",
     "better-scroll": "^1.15.2",
+    "fastclick": "^1.0.6",
     "good-storage": "^1.1.1",
     "pinyin": "^2.11.2",
     "stylus-loader": "^3.0.2",
