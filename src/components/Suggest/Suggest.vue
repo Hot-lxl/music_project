@@ -46,7 +46,7 @@ import Prompt from "@/components/Base/prompt";
 import { createSearchSong } from "@/common/song";
 import Loading from "@/components/Base/Loading";
 import Scroll from "@/components/Base/scroll";
-import { mapMutations,mapActions } from "vuex";
+import { mapMutations, mapActions } from "vuex";
 export default {
   name: "Suggest",
   components: {
@@ -71,6 +71,7 @@ export default {
     },
   },
   watch: {
+    // 监听query的变化
     query(val) {
       if (val == "") {
         //初始化数据
@@ -107,6 +108,7 @@ export default {
         let ret = [];
         // 遍历取出数据
         songs.forEach((item) => {
+          // 处理得到的数据
           ret.push(createSearchSong(item));
         });
         // 赋值给songs
@@ -118,6 +120,7 @@ export default {
 
     //开始滚动了就调用search组件的blurInput()
     listScroll() {
+      console.log("滚动");
       this.$emit("listScroll");
     },
     // 上拉 加载更多
@@ -127,7 +130,6 @@ export default {
       if (!this.hasMore) {
         return;
       }
-      console.log(this.page);
       // 发送请求获取全部
       let result = await this.$API.reqSearchSongs(this.query, this.page);
       if (result.code === 200) {
@@ -169,6 +171,8 @@ export default {
         // 将url添加到vuex
         this.setCurrentUrl(url);
       }
+      //发送自定义事件保存点击的搜索历史
+      this.$emit("select");
     },
     // 1.8秒后关闭提示框
     OutPrompt() {

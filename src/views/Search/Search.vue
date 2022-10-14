@@ -6,7 +6,7 @@
       <SearchBox ref="searchBox" @query="onQueryChange"></SearchBox>
     </div>
     <div class="shortcut-wrapper" v-show="!query">
-      <Scroll class="shortcut" :data="shortcut" ref="shortcut">
+      <Scroll class="shortcut" :data="hots" ref="shortcut">
         <div>
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
@@ -22,19 +22,20 @@
             </ul>
           </div>
 
-          <!-- <div class="search-history" v-show="searchHistory.length">
+          <div class="search-history" v-show="searchHistory.length">
             <h1 class="title">
               <span class="text">搜索历史</span>
               <span class="clear" @click="showConfirm">
                 <i class="fa fa-trash"></i>
               </span>
             </h1>
-            <search-list
+            <!-- 历史记录列表 -->
+            <SearchList
               @select="addQuery"
               @delete="deleteOne"
               :searches="searchHistory"
-            ></search-list>
-          </div> -->
+            ></SearchList>
+          </div>
         </div>
       </Scroll>
     </div>
@@ -59,16 +60,18 @@
 </template>
 
 <script>
+import SearchList from "@/components/SearchList/SearchList";
 import Scroll from "@/components/Base/scroll";
 import Suggest from "@/components/Suggest/Suggest";
 import SearchBox from "@/components/SearchBox/SearchBox";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Search",
   components: {
     SearchBox,
     Suggest,
     Scroll,
+    SearchList,
   },
   data() {
     return {
@@ -81,18 +84,21 @@ export default {
     // 页面加载前或热门搜索
     this.getHotSearch();
   },
+  computed: {
+    // 获取搜索记录
+    ...mapGetters(["searchHistory"]),
+  },
   methods: {
     ...mapActions(["saveSearchHistory"]),
+
     // 获取热门搜索
     async getHotSearch() {
       let res = await this.$API.resGetHotSearch();
-      console.log(res);
       if (res.code === 200) {
         let ret = [];
         res.result.hots.forEach((item) => {
-          ret.push(item.first);
+          ret.push(item);
         });
-        console.log(ret);
         // 赋值
         this.hots = ret;
       }
@@ -109,6 +115,15 @@ export default {
     saveSearch() {
       this.saveSearchHistory(this.query);
     },
+    // 点击热门搜索
+    addQuery(hotName) {
+      // 调用SearchBox的setQuery()改变输入框的内容
+      this.$refs.searchBox.setQuery(hotName);
+    },
+    // 点击清除搜索历史
+    showConfirm() {},
+    // 删除单个搜索历史
+    deleteOne() {},
   },
 };
 </script>

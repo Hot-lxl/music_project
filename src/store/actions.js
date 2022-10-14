@@ -116,6 +116,7 @@ export default {
     },
     // 保存搜索历史记录
     saveSearchHistory({ commit }, query) {
+        console.log("保存搜索历史：" + query);
         // 把历史存放vuex并且缓存localStorage 执行了两个函数
         commit(types.SAVESERACHHISTORY, saveSearch(query));
     },

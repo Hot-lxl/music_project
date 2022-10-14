@@ -42,5 +42,8 @@ export default {
     singer(state) {
         return state.singer || {}
     },
-
+    //搜索历史
+    searchHistory(state) {
+        return state.searchHistory;
+    }
 }

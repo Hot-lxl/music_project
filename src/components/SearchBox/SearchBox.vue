@@ -26,6 +26,10 @@ export default {
     clear() {
       this.query = "";
     },
+    // 当点击热门搜索的关键词 关键词能够同步到 搜索框
+    setQuery(query) {
+      this.query = query;
+    },
     // 输入框失去焦点触发blur()方法显示X标志
     blur() {
       this.$refs.query.blur();
