@@ -21,7 +21,7 @@
             v-for="item in group.items"
             :key="item.id"
           >
-            <img class="avatar" :src="item.avatar" alt="" />
+            <img class="avatar" v-lazy="item.avatar" alt="" />
             <span class="name">{{ item.name }}</span>
           </li>
         </ul>

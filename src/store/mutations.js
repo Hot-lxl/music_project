@@ -40,8 +40,8 @@ export default {
     [types.SET_SINGER](state, data) {
         state.singer = data;
     },
-    [types.SAVESERACHHISTORY](state, data) {
+    [types.SET_SEARCH_HISTORY](state, data) {
         state.searchHistory = data;
-    }
+    },
 
 }

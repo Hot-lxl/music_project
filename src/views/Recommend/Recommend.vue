@@ -19,7 +19,7 @@
               @click="selectItem(item)"
             >
               <div class="item-icon">
-                <img class="icon" :src="item.picUrl" alt="" />
+                <img class="icon" v-lazy="item.picUrl" alt="" />
               </div>
               <div class="item-count">
                 <i class="iconfont icon">&#xe601;</i>
@@ -48,7 +48,7 @@
               @click="playNewMusic(item, MusicList, index)"
             >
               <div class="item-icon">
-                <img class="icon" :src="item.picUrl" alt="" />
+                <img class="icon" v-lazy="item.picUrl" alt="" />
               </div>
               <div class="song-text">
                 <p class="text">{{ item.name }}</p>

@@ -3,7 +3,11 @@
   <div class="search">
     <!-- 输入框 -->
     <div class="search-box-wrapper">
-      <SearchBox ref="searchBox" @query="onQueryChange"></SearchBox>
+      <SearchBox
+        ref="searchBox"
+        @query="onQueryChange"
+        @select="saveSearch"
+      ></SearchBox>
     </div>
     <div class="shortcut-wrapper" v-show="!query">
       <Scroll class="shortcut" :data="hots" ref="shortcut">
@@ -48,18 +52,19 @@
       ></Suggest>
     </div>
     <!-- 提示框 -->
-    <!-- <confirm
+    <Confirm
       ref="confirm"
       text="是否清空搜索历史数据"
       confirBtnText="清空"
       @confirm="deleteAll"
-    ></confirm> -->
+    ></Confirm>
 
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import Confirm from "@/components/Base/confirm";
 import SearchList from "@/components/SearchList/SearchList";
 import Scroll from "@/components/Base/scroll";
 import Suggest from "@/components/Suggest/Suggest";
@@ -72,6 +77,7 @@ export default {
     Suggest,
     Scroll,
     SearchList,
+    Confirm,
   },
   data() {
     return {
@@ -89,7 +95,7 @@ export default {
     ...mapGetters(["searchHistory"]),
   },
   methods: {
-    ...mapActions(["saveSearchHistory"]),
+    ...mapActions(["saveSearchHistory", "deleteSearchHistory", "clearSearch"]),
 
     // 获取热门搜索
     async getHotSearch() {
@@ -112,18 +118,33 @@ export default {
       this.$refs.searchBox.blur();
     },
     // 保存搜索记录
-    saveSearch() {
-      this.saveSearchHistory(this.query);
+    saveSearch(clickQuery) {
+
+      if (!clickQuery) {
+        this.saveSearchHistory(this.query);
+      }
+        this.saveSearchHistory(clickQuery);
     },
-    // 点击热门搜索
+    // 点击的搜素热门或者历史进行搜索
     addQuery(hotName) {
+      console.log("搜索了：" + hotName);
       // 调用SearchBox的setQuery()改变输入框的内容
       this.$refs.searchBox.setQuery(hotName);
+      // 保存搜索记录
+      this.saveSearch(hotName);
+    },
+    // 显示提示框
+    showConfirm() {
+      this.$refs.confirm.show();
+    },
+    // 删除单个搜索历史
+    deleteOne(item) {
+      this.deleteSearchHistory(item);
     },
     // 点击清除搜索历史
-    showConfirm() {},
-    // 删除单个搜索历史
-    deleteOne() {},
+    deleteAll() {
+      this.clearSearch();
+    },
   },
 };
 </script>

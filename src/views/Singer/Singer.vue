@@ -1,12 +1,21 @@
 <template>
   <!--  热门歌手页面 -->
   <div class="singer">
-    <ListView @select="selectSinger" :data="singers"></ListView>
+    <ListView
+      @select="selectSinger"
+      v-show="singers"
+      :data="singers"
+    ></ListView>
+    <!--加载提示  -->
+    <div class="loading-container" v-show="!singers.length">
+      <Loading></Loading>
+    </div>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import Loading from "@/components/Base/Loading";
 import ListView from "@/components/Base/listview";
 import { mapMutations } from "vuex";
 import Singer from "@/common/singer";
@@ -23,6 +32,7 @@ export default {
   },
   components: {
     ListView,
+    Loading
   },
   created() {
     // 页面创建之前获取歌手数据
@@ -136,5 +146,12 @@ export default {
   top: 88px;
   bottom: 0;
   width: 100%;
+}
+
+.loading-container {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>

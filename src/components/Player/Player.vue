@@ -18,7 +18,7 @@
           <div class="middle-l">
             <div class="cd-wrapper">
               <div class="cd" :class="rotateCd">
-                <img class="image" :src="currentSong.image" />
+                <img class="image" v-lazy="currentSong.image" />
               </div>
             </div>
 
@@ -334,6 +334,7 @@ export default {
       }
       return num;
     },
+    // 是否播放
     ready() {
       // 歌曲准备好后 就播放 解决点击上/下一首按钮后 不播放的问题
       this.songReady = true;
@@ -380,9 +381,15 @@ export default {
       // 获取audiob标签
       const audio = this.$refs.audio;
       // 判断是否为true播放
-      this.$nextTick(() => {
+      // this.$nextTick(() => {
+      //   NewPlaying ? audio.play() : audio.pause();
+      // });
+      // 延迟0.1s来解决一播放就暂停会报错
+      let timer = setTimeout(() => {
         NewPlaying ? audio.play() : audio.pause();
-      });
+        // 关闭
+        clearTimeout(timer);
+      }, 500);
     },
   },
 };
@@ -492,6 +499,7 @@ export default {
             }
 
             &.pause {
+              // 规定动画正在运行还是暂停
               animation-play-state: paused;
             }
 

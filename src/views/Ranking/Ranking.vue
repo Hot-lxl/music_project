@@ -9,7 +9,7 @@
           @click="selectItem(item)"
         >
           <div class="icon">
-            <img width="100" height="100" :src="item.coverImgUrl" />
+            <img width="100" height="100" v-lazy="item.coverImgUrl" />
           </div>
           <!-- 歌曲前三首 -->
           <ul class="songlist">

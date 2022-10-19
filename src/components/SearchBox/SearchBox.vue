@@ -1,7 +1,13 @@
 <template>
   <div class="search-box">
     <i class="fa fa-search"></i>
-    <input class="box" :placeholder="placeholder" v-model="query" ref="query" />
+    <input
+      class="box"
+      :placeholder="placeholder"
+      v-model="query"
+      @keyup.enter="keyupEnter"
+      ref="query"
+    />
     <i v-show="query" class="fa fa-times" @click="clear"></i>
   </div>
 </template>
@@ -33,6 +39,10 @@ export default {
     // 输入框失去焦点触发blur()方法显示X标志
     blur() {
       this.$refs.query.blur();
+    },
+    // 回车就触发自定义事件保存搜索记录
+    keyupEnter() {
+      this.$emit("select", this.query);
     },
   },
   created() {

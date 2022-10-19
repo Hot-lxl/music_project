@@ -7,7 +7,7 @@ import { reqGetCarousel, reqGetSongList, reqGetMusicList, reqSongUrl } from "@/n
 import * as types from '@/store/mutations-types'
 import { playMode } from "@/common/config";
 import { random } from "@/common/util";
-import { saveSearch } from '@/common/cache'
+import { saveSearch, deleteSearch, clearSearch } from '@/common/cache'
 // 封装一个findIndex方法
 function findIndex(list, song) {
     return list.findIndex((item) => {
@@ -114,12 +114,6 @@ export default {
         commit(types.SET_CURRENT_INDEX, -1)
         commit(types.SET_CURRENT_URL, "")
     },
-    // 保存搜索历史记录
-    saveSearchHistory({ commit }, query) {
-        console.log("保存搜索历史：" + query);
-        // 把历史存放vuex并且缓存localStorage 执行了两个函数
-        commit(types.SAVESERACHHISTORY, saveSearch(query));
-    },
     //插入歌曲
     insertSong({ commit, state }, song) {
         // 首先获取需要修改的数据
@@ -172,5 +166,22 @@ export default {
         commit(types.SET_CURRENT_INDEX, currentIndex);
         commit(types.SET_FULL_SCREEN, true);
         commit(types.SET_PLAYING_STATE, true);
+    },
+    // 保存搜索历史记录
+    saveSearchHistory({ commit }, query) {
+        console.log("保存搜索历史：" + query);
+        // 把历史存放vuex并且缓存localStorage 执行了两个函数
+        commit(types.SET_SEARCH_HISTORY, saveSearch(query));
+    },
+    // 删除搜索历史
+    deleteSearchHistory({ commit }, query) {
+        console.log("删除搜索：" + query);
+        // 从本地缓存中删除
+        commit(types.SET_SEARCH_HISTORY, deleteSearch(query))
+    },
+    // 清除所有历史记录
+    clearSearch({ commit }) {
+        commit(types.SET_SEARCH_HISTORY, clearSearch())
     }
+
 }

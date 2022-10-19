@@ -38,7 +38,7 @@ export function saveSearch (query) {
 export function loadSearch () {
   return storage.get(SEARCH_KEY, [])
 }
-// 对比历史记录然后截取
+// 对比历史记录然后截取(删除)
 function deleteFromArray (arr, compare) {
   const index = arr.findIndex(compare)
   if (index > -1) {
@@ -49,11 +49,10 @@ function deleteFromArray (arr, compare) {
 export function deleteSearch (query) {
   // 首先获取
   let searches = storage.get(SEARCH_KEY, [])
-
   deleteFromArray(searches, (item) => {
     return item === query
   })
-
+  // 重新设置改变后的搜索历史
   storage.set(SEARCH_KEY, searches)
   return searches
 }

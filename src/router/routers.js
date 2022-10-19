@@ -1,49 +1,42 @@
 
-import Recommend from "@/views/Recommend/Recommend.vue"
-import Ranking from '@/views/Ranking/Ranking.vue'
-import Singer from '@/views/Singer/Singer.vue'
-import Search from '@/views/Search/Search.vue'
-import Bisc from '@/views/Recommend/Disc/Disc'
-import TopList from '@/views/Ranking/TopList/TopList'
-import SingerDetail from "@/views/Singer/SingerDetail/SingerDetail"
 // 对外暴露routers
 export default [
     {
         path: "/recommend",
-        component: Recommend,
+        component: () => import("@/views/Recommend/Recommend.vue"),//路由懒加载
         meta: { isShow: true },
         children: [
             {
                 path: ":id",//把子组件路径当成占位符
-                component: Bisc,
+                component: () => import('@/views/Recommend/Disc/Disc'),
             }
         ]
     },
     {
         path: "/ranking",
-        component: Ranking,
+        component: () => import('@/views/Ranking/Ranking.vue'),
         meta: { isShow: true },
         children: [
             {
                 path: ":id",
-                component: TopList,
+                component: () => import('@/views/Ranking/TopList/TopList'),
             }
         ]
     },
     {
         path: "/singer",
-        component: Singer,
+        component: () => import('@/views/Singer/Singer.vue'),
         meta: { isShow: true },
         children: [
             {
                 path: ":id",
-                component: SingerDetail,
+                component: () => import("@/views/Singer/SingerDetail/SingerDetail"),
             }
         ]
     },
     {
         path: "/search",
-        component: Search,
+        component: () => import('@/views/Search/Search.vue'),
         meta: { isShow: false }
     },
     // 重定向recommend

@@ -28,8 +28,8 @@
       enter-active-class="bounceInLeft"
       leave-active-class="fadeOutUp"
       :duration="{ enter: 500, leave: 800 }"
-    >
-      <!-- 提示框 -->
+    > 
+      <!-- 音乐提示框 -->
       <div class="prompt-container animated" v-show="prompt">
         <Prompt></Prompt>
       </div>
@@ -172,7 +172,7 @@ export default {
         this.setCurrentUrl(url);
       }
       //发送自定义事件保存点击的搜索历史
-      this.$emit("select");
+      // this.$emit("select");
     },
     // 1.8秒后关闭提示框
     OutPrompt() {
